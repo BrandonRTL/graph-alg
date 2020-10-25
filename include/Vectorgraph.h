@@ -70,19 +70,9 @@ public:
 		rank = r;
 	}
 };
-class mst_node
-{
-public:
-	int parent;
-	float weight;
-	mst_node(int p, float w)
-	{
-		parent = p;
-		weight = w;
-	}
-};
+
 int find(std::vector<subtree>& subsets, int i);
 void tree_union(std::vector<subtree>& subsets, int a, int b);
-std::vector<mst_node> boruvkas_mst(graph gr);
+void boruvkas_mst(graph& gr);
 int find_source_by_adj_number(graph& gra, int i);
 #endif

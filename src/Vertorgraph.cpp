@@ -1,10 +1,20 @@
 #include "Vectorgraph.h"
 int find(std::vector<subtree>& t_tree, int i)
 {
-	if (t_tree[i].parent != i)
-		t_tree[i].parent = find(t_tree, t_tree[i].parent);
+    int root = i;
+    while (t_tree[root].parent != root)
+    {
+        root = t_tree[root].parent;
+    }
 
-	return t_tree[i].parent;
+    while (t_tree[i].parent != root)
+    {
+        int tmp = t_tree[i].parent;
+        t_tree[i].parent = root;
+        i = root;
+    }
+
+    return root;
 }
 void tree_union(std::vector<subtree>& t_tree, int a, int b)
 {
@@ -30,15 +40,15 @@ int find_source_by_adj_number(graph& gra, int i)
 	}
 	return j - 1;
 }
-std::vector<mst_node> boruvkas_mst(graph gr)
+void boruvkas_mst(graph& gr)
 {
 	std::vector<subtree> trees; 
 	subtree t_tree;
 	int V = gr.nums.size() - 1;
 	int E = gr.data.size();
 	int tree_counter = V;
-	float tree_weight = 0;
-	std::vector<mst_node> mst;
+    int tree_control = 0;
+	int tree_weight = 0;
 	std::cout << "MST" << std::endl;
 	
 	for (int i = 0; i < V; i++)
@@ -46,26 +56,20 @@ std::vector<mst_node> boruvkas_mst(graph gr)
 		t_tree = subtree(i, 0);
 		trees.push_back(t_tree);
 	}
-	for (int i = 0; i < V - 1; i++)
-	{
-		mst_node temp(0, 0);
-		mst.push_back(temp);
-	}
 	
 	while (tree_counter > 1)
 	{
 		std::vector<int> smallest_edge(V, -1);
+        int tree_control = tree_counter;
 		for (int i = 0; i < V; i++)
 		{
+            int set_b = find(trees, i);
 			for (int j = gr.nums[i]; j < gr.nums[i + 1]; j++)
 			{
 
 				int set_a = find(trees, gr.adj[j]);
-				int set_b = find(trees, i);
 				
-				if (set_a == set_b)
-					continue;
-				else
+				if (set_a != set_b)
 				{
 					if (smallest_edge[set_a] == -1 || gr.data[smallest_edge[set_a]] > gr.data[j])
 						smallest_edge[set_a] = j;
@@ -84,27 +88,20 @@ std::vector<mst_node> boruvkas_mst(graph gr)
 
 				if (set_a == set_b)
 					continue;
-			//	mst_node temp(find_source_by_adj_number(gr, smallest_edge[i]), gr.data[smallest_edge[i]]);
-				mst_node temp(gr.adj[smallest_edge[i]], gr.data[smallest_edge[i]]);
+				
 				tree_weight += gr.data[smallest_edge[i]];
-				mst[find_source_by_adj_number(gr, smallest_edge[i])] = temp;
-				/*
-				std::cout << "Edge (" << find_source_by_adj_number(gr, smallest_edge[i]) << ","
-					<< gr.adj[smallest_edge[i]] << ") " << "weight "
-					<< gr.data[smallest_edge[i]] << std::endl;
-					*/
+			//	std::cout << "Edge (" << find_source_by_adj_number(gr, smallest_edge[i]) << ","
+			//		<< gr.adj[smallest_edge[i]] << ") " << "weight "
+			//		<< gr.data[smallest_edge[i]] << std::endl;
 				tree_union(trees, set_a, set_b);
-				tree_counter--;
+			//	tree_counter--;
+                tree_control--;
 				
 			}
 		}
-	}
-	/*
-	for (int i = 0; i < V - 1; i++)
-	{
-		std::cout << i << " " << mst[i].parent << " " << mst[i].weight << std::endl;
+        if (tree_control == tree_counter)
+            break;
+        tree_counter = tree_control;
 	}
 	std::cout << "Total weight: " << tree_weight << std::endl;
-	*/
-	return mst;
 }
