@@ -5,9 +5,11 @@
 #include <Vectorgraph.h>
 int main()
 {
-	graph A("3.mtx");
-	int abc;
-	boruvkas_mst(A);	
-	std::cin >> abc;
-	return 0;
+    int start = clock();
+    graph A("3.mtx");
+    std::cout << "reading time: " << (clock() - start) / CLOCKS_PER_SEC << std::endl;
+    int abc;
+    boruvkas_mst(A);
+    std::cin >> abc;
+    return 0;
 }
