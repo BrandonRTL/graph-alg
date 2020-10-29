@@ -6,7 +6,7 @@
 int main()
 {
     int start = clock();
-    graph A("3.mtx");
+    graph A("5.mtx");
     std::cout << "reading time: " << (clock() - start) / CLOCKS_PER_SEC << std::endl;
     int abc;
     boruvkas_mst(A);

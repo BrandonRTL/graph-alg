@@ -29,8 +29,8 @@ public:
         file >> num_row >> num_col >> num_lines;
         std::vector<std::vector<int>> temp_adj(num_row);
         std::vector<std::vector<float>> temp_data(num_row);
-
         nums.resize(num_row + 1);
+        sec_ver.resize(2 * num_lines);
         for (int l = 0; l < num_lines; l++)
         {
             double data;
@@ -43,11 +43,11 @@ public:
                 temp_adj[col - 1].push_back(row - 1);
                 temp_data[col - 1].push_back(data);
             }
-
         }
 
         file.close();
         nums[0] = 0;
+        int counter = 0;
         for (int i = 0; i < num_row; i++)
         {
             for (int j = 0; j < temp_adj[i].size(); j++)
@@ -55,11 +55,14 @@ public:
                 adj.push_back(temp_adj[i][j]);
                 data.push_back(temp_data[i][j]);
                 sum_adj++;
+                sec_ver[counter] = i;
+                counter++;
             }
             nums[i + 1] = sum_adj;
         }
-        //		for (int i = 0; i < adj.size(); i++)
-        //			std::cout << adj[i] << " ";
+        //for (int i = 0; i < adj.size(); i++)
+        //	std::cout << adj[i] << " " << sec_ver[i] << " " << data[i] << std::endl;
+        //std::cout << std::endl;
     }
 };
 class subtree
@@ -77,5 +80,4 @@ public:
 int find(std::vector<subtree>& subsets, int i);
 void tree_union(std::vector<subtree>& subsets, int a, int b);
 void boruvkas_mst(graph& gr);
-int find_source_by_adj_number(graph& gra, int i);
 #endif

@@ -30,16 +30,6 @@ void tree_union(std::vector<subtree>& t_tree, int a, int b)
         t_tree[root_a].rank = t_tree[root_a].rank + 1;
     }
 }
-int find_source_by_adj_number(graph& gra, int i)
-{
-    int j = 1;
-    for (int k = 0; k < i; k++)
-    {
-        if (gra.nums[j] <= i)
-            j++;
-    }
-    return j - 1;
-}
 void boruvkas_mst(graph& gr)
 {
     subtree t_tree;
@@ -81,7 +71,7 @@ void boruvkas_mst(graph& gr)
             if (smallest_edge[i] != -1)
             {
                 int set_a = find(trees, gr.adj[smallest_edge[i]]);
-                int set_b = find(trees, find_source_by_adj_number(gr, smallest_edge[i]));
+                int set_b = find(trees, gr.sec_ver[smallest_edge[i]]);
 
                 if (set_a != set_b)
                 {
